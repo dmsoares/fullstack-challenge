@@ -1,0 +1,17 @@
+{
+    "name": "fullstack-challenge",
+    "version": "1.0.0",
+    "description": "Fullstack TypeScript Application",
+    "main": "src/index.ts",
+    "scripts": {
+        "backend": "cd apps/backend && npm run dev",
+        "frontend": "cd apps/frontend && npm start",
+        "lint": "npm run lint --workspaces"
+    },
+    "author": "",
+    "license": "ISC",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ]
+}
