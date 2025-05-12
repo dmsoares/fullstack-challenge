@@ -6,11 +6,10 @@ import { CreateSongService } from '@fullstack-challenge/core';
 import { MalformedRequestError, withErrorHandling } from '../../error';
 
 interface Dependencies {
-    imagesDirectory: string;
     createSongService: CreateSongService;
 }
 
-export function createSongHandler({ imagesDirectory, createSongService }: Dependencies): Handler {
+export function createSongHandler({ createSongService }: Dependencies): Handler {
     return withErrorHandling(async (req, res) => {
         if (!req.file) throw new MalformedRequestError('Image is required');
 
@@ -29,10 +28,7 @@ export function createSongHandler({ imagesDirectory, createSongService }: Depend
         });
 
         res.status(201).json({
-            id: newSong.id.value,
-            name: newSong.name.name,
-            artist: newSong.artist.name,
-            imageUrl: `${imagesDirectory}/${req.file.filename}`
+            id: newSong.id.value
         });
     });
 }

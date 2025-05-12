@@ -33,9 +33,9 @@ const storage = configDiskStorage(`${staticDirectory}/${imagesDirectory}`);
 const upload = multer({ storage: storage }).single('image');
 
 // Routes
-app.get('/api/songs', listActiveSongsHandler({ imagesDirectory, listActiveSongsService }));
-app.post('/api/songs', upload, createSongHandler({ imagesDirectory, createSongService }));
-app.delete('/api/songs/:id', deleteSongHandler(inactivateSongService));
+app.get('/songs', listActiveSongsHandler({ imagesDirectory, listActiveSongsService }));
+app.post('/songs', upload, createSongHandler({ createSongService }));
+app.delete('/songs/:id', deleteSongHandler(inactivateSongService));
 
 // Start server
 app.listen(PORT, () => {
