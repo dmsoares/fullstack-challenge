@@ -3,80 +3,71 @@ import multer from 'multer';
 import * as E from 'fp-ts/Either';
 import { CreateSongType, zCreateSongSchema } from './types';
 import { CreateSongService } from '@fullstack-challenge/core';
+import { MalformedRequestError, withErrorHandling } from '../../error';
 
-const storage = multer.diskStorage({
-    destination: 'uploads/images/',
-    filename: function (req, file, cb) {
+interface Dependencies {
+    imagesDirectory: string;
+    createSongService: CreateSongService;
+}
+
+export function createSongHandler({ imagesDirectory, createSongService }: Dependencies): Handler {
+    return withErrorHandling(async (req, res) => {
+        if (!req.file) throw new MalformedRequestError('Image is required');
+
         const parsedBody = parseBody(req.body);
 
         if (E.isLeft(parsedBody)) {
-            return cb(new Error(parsedBody.left.message), '');
-        }
-
-        if (!file.mimetype.startsWith('image/')) {
-            return cb(new Error('Invalid image format'), '');
+            throw parsedBody.left;
         }
 
         const { name, artist } = parsedBody.right;
-        const filetype = file.mimetype.split('/')[1];
 
-        const filename = `song-${name}-${artist}-${new Date().getTime()}.${filetype}`.replace(
-            /\s+/g,
-            '_'
-        );
+        const newSong = await createSongService.execute({
+            name,
+            artist,
+            imageUrl: req.file.filename
+        });
 
-        cb(null, filename);
-    }
-});
+        res.status(201).json({
+            id: newSong.id.value,
+            name: newSong.name.name,
+            artist: newSong.artist.name,
+            imageUrl: `${imagesDirectory}/${req.file.filename}`
+        });
+    });
+}
 
-const upload = multer({ storage: storage }).single('image');
-
-export function createSongHandler(createSongService: CreateSongService): Handler {
-    return async (req, res) => {
-        upload(req, res, async function (err) {
-            if (err instanceof multer.MulterError) {
-                res.status(500).json({ error: err.message });
-                return;
-            } else if (err) {
-                res.status(400).json({ error: err.message });
-                return;
-            }
-
-            if (!req.file) {
-                res.status(400).json({ error: 'Image is required' });
-                return;
-            }
-
+export const configDiskStorage = (destination: string) =>
+    multer.diskStorage({
+        destination,
+        filename: function (req, file, cb) {
             const parsedBody = parseBody(req.body);
 
             if (E.isLeft(parsedBody)) {
-                res.status(400).json({ error: parsedBody.left.message });
-                return;
+                return cb(parsedBody.left, '');
+            }
+
+            if (!file.mimetype.startsWith('image/')) {
+                return cb(new MalformedRequestError('Invalid image format'), '');
             }
 
             const { name, artist } = parsedBody.right;
+            const filetype = file.mimetype.split('/')[1];
 
-            const newSong = await createSongService.execute({
-                name,
-                artist,
-                imageUrl: req.file.filename
-            });
+            const filename = `song-${name}-${artist}-${new Date().getTime()}.${filetype}`.replace(
+                /\s+/g,
+                '_'
+            );
 
-            res.json({
-                id: newSong.id.value,
-                name: newSong.name.name,
-                artist: newSong.artist.name,
-                imageUrl: req.file.path
-            });
-        });
-    };
-}
+            cb(null, filename);
+        }
+    });
 
 const parseBody = (body: unknown): E.Either<Error, CreateSongType> => {
     const { data, success, error } = zCreateSongSchema.safeParse(body);
 
     if (!success) {
-        return E.left(new Error(error.message));
+        return E.left(new MalformedRequestError(error.message));
     }
 
     return E.right(data);

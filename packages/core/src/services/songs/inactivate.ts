@@ -1,5 +1,6 @@
 import { Song, SongIdentifier } from '../../domain';
 import { SongRepositoryInterface } from '../../infrastructure';
+import { NotFoundError } from '../error';
 
 interface InactivateSongServiceInput {
     id: string;
@@ -12,7 +13,7 @@ export class InactivateSongService {
         const song = await this.songRepository.findById(SongIdentifier.create(id));
 
         if (!song) {
-            throw new Error(`Song with id ${id} not found`);
+            throw new NotFoundError(`Song with id ${id} not found`);
         }
 
         const updatedSong = Song.create({

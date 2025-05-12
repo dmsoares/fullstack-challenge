@@ -1,10 +1,7 @@
-abstract class DomainError extends Error {
-    abstract readonly tag: ErrorTag;
-}
+import { CoreError } from '../error';
 
-export class ValidationError extends DomainError {
+export class ValidationError extends CoreError {
     readonly tag = 'ValidationError';
 }
 
-export type ErrorTag =
-    | 'ValidationError'
+export type DomainErrorTag = 'ValidationError';
