@@ -19,7 +19,10 @@ export default function SongList() {
             ))}
         </ul>
     ) : (
-        <div>No songs</div>
+        <div className="flex flex-col gap-2 pt-20">
+            <div className="text-2xl text-[#b4befe]">...</div>
+            <div className="text-md text-[#94e2d5]">Start adding some music!</div>
+        </div>
     );
 }
 
@@ -34,14 +37,14 @@ function SongItem({ song }: { song: Song }) {
     });
 
     return (
-        <li className="flex gap-4 justify-between items-center border-2 border-gray-400 rounded-md">
+        <li className="flex gap-4 justify-between items-center border-2 border-[#6c7086] rounded-md pr-4 bg-[#313244]">
             <img className="w-20 h-20 rounded-l-sm" src={song.imageUrl} alt={song.name} />
             <div className="flex flex-col pr-4 w-full">
-                <div className="text-xl">{song.name}</div>
-                <div className="text-sm text-gray-400">{song.artist}</div>
+                <div className="text-2xl text-[#cdd6f4] text-left">{song.name}</div>
+                <div className="text-sm text-[#a6adc8] text-left">{song.artist}</div>
             </div>
-            <button onClick={() => handleDelete(song.id)} className="w-6 h-6">
-                <FaTrash />
+            <button onClick={() => handleDelete(song.id)} className="w-10 h-10">
+                <FaTrash className="cursor-pointer text-[#f38ba8] hover:text-[#eba0ac] w-6 h-6" />
             </button>
         </li>
     );
