@@ -1,5 +1,5 @@
 import { Handler } from 'express';
-import { InactivateSongService } from '@fullstack-challenge/core';
+import { InactivateSongService } from '../../core';
 import { zDeleteSongSchema } from './types';
 import { MalformedRequestError, withErrorHandling } from '../../error';
 

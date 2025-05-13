@@ -1,4 +1,4 @@
-import { Song, SongIdentifier } from '../../domain';
+import { SongIdentifier, Song } from '../../domain';
 import { SongRepositoryInterface } from '../../infrastructure';
 import { NotFoundError } from '../error';
 

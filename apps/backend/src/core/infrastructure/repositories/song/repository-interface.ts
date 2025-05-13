@@ -1,4 +1,4 @@
-import { Song, SongIdentifier } from "../../../domain";
+import { Song, SongIdentifier } from '../../../domain';
 
 export interface SongRepositoryInterface {
     save(song: Song): Promise<void>;

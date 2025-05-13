@@ -1,4 +1,4 @@
-import { Song, SongArtist, SongIdentifier, SongImageUrl, SongName } from '../../../domain';
+import { Song, SongIdentifier, SongName, SongArtist, SongImageUrl } from '../../../domain';
 import { SongRepositoryInterface } from './repository-interface';
 
 export interface SerializedSong {

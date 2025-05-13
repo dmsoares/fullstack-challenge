@@ -2,7 +2,7 @@ import { Handler } from 'express';
 import multer from 'multer';
 import * as E from 'fp-ts/Either';
 import { CreateSongType, zCreateSongSchema } from './types';
-import { CreateSongService } from '@fullstack-challenge/core';
+import { CreateSongService } from '../../core';
 import { MalformedRequestError, withErrorHandling } from '../../error';
 
 interface Dependencies {

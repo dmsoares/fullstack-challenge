@@ -3,7 +3,7 @@ import multer from 'multer';
 import * as E from 'fp-ts/Either';
 import { UpdateSongType, zUpdateSongSchema } from './types';
 import { MalformedRequestError, withErrorHandling } from '../../error';
-import { UpdateSongService } from '@fullstack-challenge/core';
+import { UpdateSongService } from '../../core';
 
 interface Dependencies {
     updateSongService: UpdateSongService;

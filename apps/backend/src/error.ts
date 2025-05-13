@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { CoreError, DomainErrorTag, ServiceErrorTag } from '@fullstack-challenge/core';
+import { CoreError, DomainErrorTag, ServiceErrorTag } from './core';
 
 export abstract class APIError extends Error {
     abstract readonly tag: APIErrorTag;

@@ -1,6 +1,6 @@
 import { Handler } from 'express';
-import { ListActiveSongsService } from '@fullstack-challenge/core';
 import { withErrorHandling } from '../../error';
+import { ListActiveSongsService } from '../../core';
 
 interface Dependencies {
     imagesDirectory: string;

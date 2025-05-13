@@ -8,7 +8,7 @@ import {
     InMemorySongRepository,
     ListActiveSongsService,
     UpdateSongService
-} from '@fullstack-challenge/core';
+} from './core';
 
 import { configDiskStorage, createSongHandler } from './handlers/create-song/handler';
 import { listActiveSongsHandler } from './handlers/list-songs/handler';
