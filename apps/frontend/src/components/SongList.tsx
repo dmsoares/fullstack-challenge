@@ -1,6 +1,7 @@
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { FaTrash } from 'react-icons/fa';
-import { deleteSong, getSongs } from '../services/songs';
+import { FaTrash, FaPencilAlt } from 'react-icons/fa';
+import { deleteSong, getSongs, updateSong } from '../services/songs';
+import { useSongUploadModal, type UploadData } from './SongUploadModal';
 
 interface Song {
     id: string;
@@ -36,6 +37,21 @@ function SongItem({ song }: { song: Song }) {
         }
     });
 
+    const { mutate: handleUpdate } = useMutation({
+        mutationFn: updateSong,
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['songs'] });
+        }
+    });
+
+    const onSubmit = ({ name, artist, image }: UploadData, next?: () => void) => {
+        if (image) {
+            handleUpdate({ id: song.id, name, artist, image }, { onSettled: next });
+        }
+    };
+
+    const { openModal, Modal: SongUploadModal } = useSongUploadModal();
+
     return (
         <li className="flex gap-4 justify-between items-center border-2 border-[#6c7086] rounded-md pr-4 bg-[#313244]">
             <img className="w-20 h-20 rounded-l-sm" src={song.imageUrl} alt={song.name} />
@@ -43,9 +59,13 @@ function SongItem({ song }: { song: Song }) {
                 <div className="text-2xl text-[#cdd6f4] text-left">{song.name}</div>
                 <div className="text-sm text-[#a6adc8] text-left">{song.artist}</div>
             </div>
+            <button onClick={openModal} className="w-10 h-10">
+                <FaPencilAlt className="cursor-pointer text-[#94e2d5] hover:text-[#74c7ec] w-6 h-6" />
+            </button>
             <button onClick={() => handleDelete(song.id)} className="w-10 h-10">
                 <FaTrash className="cursor-pointer text-[#f38ba8] hover:text-[#eba0ac] w-6 h-6" />
             </button>
+            <SongUploadModal onSubmit={onSubmit} buttonLabel="Update" />
         </li>
     );
 }

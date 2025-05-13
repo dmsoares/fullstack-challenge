@@ -1,6 +1,15 @@
-import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { addSong } from '../services/songs';
+
+export interface UploadData {
+    name: string;
+    artist: string;
+    image: File | null;
+}
+
+interface Props {
+    onSubmit: ({ name, artist, image }: UploadData, onSettled?: () => void) => void;
+    buttonLabel: string;
+}
 
 export function useSongUploadModal() {
     const [isOpen, setIsOpen] = useState(false);
@@ -8,22 +17,12 @@ export function useSongUploadModal() {
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
 
-    function SongUploadModal() {
+    function SongUploadModal({ onSubmit, buttonLabel }: Props) {
         const modalWrapperRef = useRef(null);
 
         const [name, setName] = useState('');
         const [artist, setArtist] = useState('');
         const [image, setImage] = useState<File | null>(null);
-
-        const queryClient = useQueryClient();
-
-        const mutation = useMutation({
-            mutationFn: addSong,
-            onSettled: () => {
-                queryClient.invalidateQueries({ queryKey: ['songs'] });
-                closeModal();
-            }
-        });
 
         const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target.files) {
@@ -38,7 +37,7 @@ export function useSongUploadModal() {
                 return alert('Please fill in all fields');
             }
 
-            mutation.mutate({ name, artist, image });
+            onSubmit({ name, artist, image }, closeModal);
         };
 
         return (
@@ -91,7 +90,7 @@ export function useSongUploadModal() {
                                 type="submit"
                                 className="cursor-pointer bg-[#89b4fa] text-white px-4 py-2 mt-8 rounded-md"
                             >
-                                Add
+                                {buttonLabel}
                             </button>
                         </form>
                     </div>

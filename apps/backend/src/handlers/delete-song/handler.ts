@@ -3,7 +3,11 @@ import { InactivateSongService } from '@fullstack-challenge/core';
 import { zDeleteSongSchema } from './types';
 import { MalformedRequestError, withErrorHandling } from '../../error';
 
-export function deleteSongHandler(inactivateSongService: InactivateSongService): Handler {
+interface Dependencies {
+    inactivateSongService: InactivateSongService;
+}
+
+export function deleteSongHandler({ inactivateSongService }: Dependencies): Handler {
     return withErrorHandling(async (req, res) => {
         const { data, success, error } = zDeleteSongSchema.safeParse(req.params);
 

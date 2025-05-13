@@ -20,7 +20,7 @@ export const getSongs = async (): Promise<Song[]> => {
     }));
 };
 
-interface CreateSongInput {
+export interface CreateSongInput {
     name: string;
     artist: string;
     image: File;
@@ -47,6 +47,27 @@ export const addSong = async (song: CreateSongInput): Promise<CreateSongResponse
 export const deleteSong = async (songId: string): Promise<void> => {
     const response = await fetch(`${VITE_SONGS_API_URL}/songs/${songId}`, {
         method: 'DELETE'
+    });
+
+    return response.json();
+};
+
+interface UpdateSongInput {
+    id: string;
+    name: string;
+    artist: string;
+    image: File;
+}
+
+export const updateSong = async ({ id, name, artist, image }: UpdateSongInput): Promise<void> => {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('artist', artist);
+    formData.append('image', image);
+
+    const response = await fetch(`${VITE_SONGS_API_URL}/songs/${id}`, {
+        method: 'PUT',
+        body: formData
     });
 
     return response.json();
