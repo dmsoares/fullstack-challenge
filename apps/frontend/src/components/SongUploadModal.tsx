@@ -9,6 +9,7 @@ export interface UploadData {
 interface Props {
     onSubmit: ({ name, artist, image }: UploadData, onSettled?: () => void) => void;
     buttonLabel: string;
+    initialValues?: Omit<UploadData, 'image'>;
 }
 
 export function useSongUploadModal() {
@@ -17,11 +18,11 @@ export function useSongUploadModal() {
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
 
-    function SongUploadModal({ onSubmit, buttonLabel }: Props) {
+    function SongUploadModal({ onSubmit, buttonLabel, initialValues }: Props) {
         const modalWrapperRef = useRef(null);
 
-        const [name, setName] = useState('');
-        const [artist, setArtist] = useState('');
+        const [name, setName] = useState(initialValues?.name || '');
+        const [artist, setArtist] = useState(initialValues?.artist || '');
         const [image, setImage] = useState<File | null>(null);
 
         const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

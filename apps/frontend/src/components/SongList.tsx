@@ -65,7 +65,11 @@ function SongItem({ song }: { song: Song }) {
             <button onClick={() => handleDelete(song.id)} className="w-10 h-10">
                 <FaTrash className="cursor-pointer text-[#f38ba8] hover:text-[#eba0ac] w-6 h-6" />
             </button>
-            <SongUploadModal onSubmit={onSubmit} buttonLabel="Update" />
+            <SongUploadModal
+                onSubmit={onSubmit}
+                buttonLabel="Update"
+                initialValues={{ name: song.name, artist: song.artist }}
+            />
         </li>
     );
 }
