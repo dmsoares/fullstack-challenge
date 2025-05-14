@@ -2,6 +2,7 @@ import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { FaTrash, FaPencilAlt } from 'react-icons/fa';
 import { deleteSong, getSongs, updateSong } from '../services/songs';
 import { useSongUploadModal, type UploadData } from './SongUploadModal';
+import Spinner from './Spinner';
 
 interface Song {
     id: string;
@@ -11,9 +12,13 @@ interface Song {
 }
 
 export default function SongList() {
-    const { data } = useQuery({ queryKey: ['songs'], queryFn: getSongs });
+    const { data, isLoading } = useQuery({ queryKey: ['songs'], queryFn: getSongs });
 
-    return data && data.length > 0 ? (
+    return isLoading ? (
+        <div className="flex flex-col gap-2 pt-20">
+            <Spinner />
+        </div>
+    ) : data && data.length > 0 ? (
         <ul className="flex flex-col gap-2 w-full">
             {data.map((song, idx) => (
                 <SongItem key={`song-${idx}`} song={song} />

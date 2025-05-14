@@ -1,21 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSongUploadModal, type UploadData } from './SongUploadModal';
-import { addSong } from '../services/songs';
+import { useSongUploadModal } from './SongUploadModal';
+import { addSong, type CreateSongInput } from '../services/songs';
 
 export default function Header() {
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
         mutationFn: addSong,
-        onSettled: () => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['songs'] });
         }
     });
 
-    const onSubmit = ({ name, artist, image }: UploadData, next?: () => void) => {
-        if (image) {
-            mutate({ name, artist, image }, { onSuccess: next });
-        }
+    const onSubmit = ({ name, artist, image }: CreateSongInput, next?: () => void) => {
+        mutate({ name, artist, image }, { onSuccess: next });
     };
 
     const { openModal, Modal: SongUploadModal } = useSongUploadModal();
