@@ -22,7 +22,5 @@ export function listActiveSongsHandler({
                 imageUrl: `${imagesDirectory}/${song.imageUrl.url}`
             }))
         );
-
-        res.json(songs);
     });
 }
